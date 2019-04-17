@@ -1,0 +1,9 @@
+PROGRAM myprogram;
+Begin
+ if 256>= 3 then;
+(* It`s a commentary *)
+ else ;
+End.
+
+  
+		

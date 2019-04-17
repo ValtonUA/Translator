@@ -1,0 +1,5 @@
+WHILE ?;  !!;!
+DO ; ENDIF :
+
+(fwa -)  (* non-closed
+ comm )

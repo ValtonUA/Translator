@@ -1,0 +1,7 @@
+C:\Users\telma\source\repos\IPZTranslator\IPZTranslator\bin\Debug\IPZTranslator.exe.config
+C:\Users\telma\source\repos\IPZTranslator\IPZTranslator\bin\Debug\IPZTranslator.exe
+C:\Users\telma\source\repos\IPZTranslator\IPZTranslator\bin\Debug\IPZTranslator.pdb
+C:\Users\telma\source\repos\IPZTranslator\IPZTranslator\obj\Debug\IPZTranslator.csprojAssemblyReference.cache
+C:\Users\telma\source\repos\IPZTranslator\IPZTranslator\obj\Debug\IPZTranslator.csproj.CoreCompileInputs.cache
+C:\Users\telma\source\repos\IPZTranslator\IPZTranslator\obj\Debug\IPZTranslator.exe
+C:\Users\telma\source\repos\IPZTranslator\IPZTranslator\obj\Debug\IPZTranslator.pdb

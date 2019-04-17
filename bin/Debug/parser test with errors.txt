@@ -1,0 +1,10 @@
+Program p1;
+BEGUN
+if b2 = 12 then
+ while 256 < k do
+  (* empty loop *)
+ endwhile;
+else (* nothing *)
+edif:
+
+END;

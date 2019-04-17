@@ -1,0 +1,11 @@
+Program p1;
+BEGIN
+if b2 >= 12 then
+ 
+else (* nothing *)
+Else if 55 >= 56 then
+     endif;
+Else
+endif ;
+
+END.
