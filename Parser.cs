@@ -308,7 +308,7 @@ namespace IPZTranslator
             else if (res == Response.Error)
                 return Response.Error;
 
-            if (alternative_part_list(nodes.Last().Children) == Response.EOF)
+            if (alternative_part(nodes.Last().Children) == Response.EOF)
                 return Response.EOF;
 
             return Response.OK;
@@ -351,26 +351,6 @@ namespace IPZTranslator
                 return Response.EOF;
 
             if (statements_list(nodes.Last().Children) == Response.EOF)
-                return Response.EOF;
-
-            return Response.OK;
-        }
-
-        Response alternative_part_list(List<Node> nodes)
-        {
-            nodes.Add(new Node("<Alternative-part-list>"));
-
-            Response res = alternative_part(nodes.Last().Children);
-            if (res == Response.EOF)
-                return Response.EOF;
-            else if (res == Response.Empty) // out from recursion 
-            {
-                nodes.Last().Children.RemoveAt(nodes.Last().Children.Count - 1);
-                nodes.Last().Children.Add(new Node("<Empty>"));
-                return Response.OK;
-            }
-
-            if (alternative_part_list(nodes.Last().Children) == Response.EOF)
                 return Response.EOF;
 
             return Response.OK;
