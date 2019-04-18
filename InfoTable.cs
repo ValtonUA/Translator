@@ -9,11 +9,11 @@ namespace IPZTranslator
     public class InfoTable
     {
         #region Fields
-        Dictionary<string, int> _keywords = new Dictionary<string, int>();
-        Dictionary<string, int> _identifiers = new Dictionary<string, int>();
-        Dictionary<string, int> _constants = new Dictionary<string, int>();
-        Dictionary<string, int> _shortDelimiters = new Dictionary<string, int>();
-        Dictionary<string, int> _longDelimiters = new Dictionary<string, int>();
+        public Dictionary<string, int> Keywords { get; private set; }
+        public Dictionary<string, int> Identifiers { get; private set; }
+        public Dictionary<string, int> Constants { get; private set; }
+        public Dictionary<string, int> ShortDelimiters { get; private set; }
+        public Dictionary<string, int> LongDelimiters { get; private set; }
 
         int _keywordsCounter;
         int _identifiersCounter;
@@ -36,35 +36,41 @@ namespace IPZTranslator
             _constantsCounter = CONSTANTS_START;
             _shortDelimitersCounter = SHORT_DELIMITERS_START;
             _longDelimitersCounter = LONG_DELIMITERS_START;
+
+            Keywords = new Dictionary<string, int>();
+            Identifiers = new Dictionary<string, int>();
+            Constants = new Dictionary<string, int>();
+            ShortDelimiters = new Dictionary<string, int>();
+            LongDelimiters = new Dictionary<string, int>();
         }
         #region Methods
         public string GetKey(int value)
         {
             string result = "";
             if (value >= IDENTIFIERS_START)
-                result = _identifiers.FirstOrDefault(tmp => tmp.Value == value).Key;
+                result = Identifiers.FirstOrDefault(tmp => tmp.Value == value).Key;
             else if (value >= CONSTANTS_START)
-                result = _constants.FirstOrDefault(tmp => tmp.Value == value).Key;
+                result = Constants.FirstOrDefault(tmp => tmp.Value == value).Key;
             else if (value >= KEYWORDS_START)
-                result = _keywords.FirstOrDefault(tmp => tmp.Value == value).Key;
+                result = Keywords.FirstOrDefault(tmp => tmp.Value == value).Key;
             else if (value >= LONG_DELIMITERS_START)
-                result = _longDelimiters.FirstOrDefault(tmp => tmp.Value == value).Key;
+                result = LongDelimiters.FirstOrDefault(tmp => tmp.Value == value).Key;
             else if (value >= SHORT_DELIMITERS_START)
-                result = _shortDelimiters.FirstOrDefault(tmp => tmp.Value == value).Key;
+                result = ShortDelimiters.FirstOrDefault(tmp => tmp.Value == value).Key;
 
             return result;
         }
 
         public int AddKeyword(string key)
         {
-            if (!_keywords.ContainsKey(key))
+            if (!Keywords.ContainsKey(key))
             {
-                _keywords.Add(key, _keywordsCounter);
+                Keywords.Add(key, _keywordsCounter);
                 return _keywordsCounter++;
             }
             else
             {
-                return _keywords[key];
+                return Keywords[key];
             }
         }
 
@@ -80,14 +86,14 @@ namespace IPZTranslator
 
         public int AddIdentifier(string key)
         {
-            if (!_identifiers.ContainsKey(key))
+            if (!Identifiers.ContainsKey(key))
             {
-                _identifiers.Add(key, _identifiersCounter);
+                Identifiers.Add(key, _identifiersCounter);
                 return _identifiersCounter++;
             }
             else
             {
-                return _identifiers[key];
+                return Identifiers[key];
             }
         }
 
@@ -104,14 +110,14 @@ namespace IPZTranslator
         public int AddConstant(string key)
         // returns the value (code)
         {
-            if (!_constants.ContainsKey(key))
+            if (!Constants.ContainsKey(key))
             {
-                _constants.Add(key, _constantsCounter);
+                Constants.Add(key, _constantsCounter);
                 return _constantsCounter++;
             }
             else
             {
-                return _constants[key];
+                return Constants[key];
             }
         }
 
@@ -127,14 +133,14 @@ namespace IPZTranslator
 
         public int AddShortDelimiter(string key)
         {
-            if (!_shortDelimiters.ContainsKey(key))
+            if (!ShortDelimiters.ContainsKey(key))
             {
-                _shortDelimiters.Add(key, _shortDelimitersCounter);
+                ShortDelimiters.Add(key, _shortDelimitersCounter);
                 return _shortDelimitersCounter++;
             }
             else
             {
-                return _shortDelimiters[key];
+                return ShortDelimiters[key];
             }
         }
 
@@ -150,14 +156,14 @@ namespace IPZTranslator
 
         public int AddLongDelimiter(string key)
         {
-            if (!_longDelimiters.ContainsKey(key))
+            if (!LongDelimiters.ContainsKey(key))
             {
-                _longDelimiters.Add(key, _longDelimitersCounter);
+                LongDelimiters.Add(key, _longDelimitersCounter);
                 return _longDelimitersCounter++;
             }
             else
             {
-                return _longDelimiters[key];
+                return LongDelimiters[key];
             }
         }
 
@@ -173,59 +179,59 @@ namespace IPZTranslator
 
         public Dictionary<string, int> GetKeywords()
         {
-            return _keywords;
+            return Keywords;
         }
 
         public Dictionary<string, int> GetIdentifiers()
         {
-            return _identifiers;
+            return Identifiers;
         }
 
         public Dictionary<string, int> GetConstants()
         {
-            return _constants;
+            return Constants;
         }
 
         public Dictionary<string, int> GetShortDelimiters()
         {
-            return _shortDelimiters;
+            return ShortDelimiters;
         }
 
         public Dictionary<string, int> GetLongDelimiters()
         {
-            return _longDelimiters;
+            return LongDelimiters;
         }
 
         public void PrintFullInfo()
         {
             Console.WriteLine("Keywords");
-            foreach (string key in _keywords.Keys)
+            foreach (string key in Keywords.Keys)
             {
-                Console.WriteLine("key: " + key + ", value: " + _keywords[key]);
+                Console.WriteLine("key: " + key + ", value: " + Keywords[key]);
             }
             Console.WriteLine("-------------------------------------");
             Console.WriteLine("Identifiers");
-            foreach (string key in _identifiers.Keys)
+            foreach (string key in Identifiers.Keys)
             {
-                Console.WriteLine("key: " + key + ", value: " + _identifiers[key]);
+                Console.WriteLine("key: " + key + ", value: " + Identifiers[key]);
             }
             Console.WriteLine("-------------------------------------");
             Console.WriteLine("Constants");
-            foreach (string key in _constants.Keys)
+            foreach (string key in Constants.Keys)
             {
-                Console.WriteLine("key: " + key + ", value: " + _constants[key]);
+                Console.WriteLine("key: " + key + ", value: " + Constants[key]);
             }
             Console.WriteLine("-------------------------------------");
             Console.WriteLine("Short delimiters");
-            foreach (string key in _shortDelimiters.Keys)
+            foreach (string key in ShortDelimiters.Keys)
             {
-                Console.WriteLine("key: " + key + ", value: " + _shortDelimiters[key]);
+                Console.WriteLine("key: " + key + ", value: " + ShortDelimiters[key]);
             }
             Console.WriteLine("-------------------------------------");
             Console.WriteLine("Long delimiters");
-            foreach (string key in _longDelimiters.Keys)
+            foreach (string key in LongDelimiters.Keys)
             {
-                Console.WriteLine("key: " + key + ", value: " + _longDelimiters[key]);
+                Console.WriteLine("key: " + key + ", value: " + LongDelimiters[key]);
             }
             Console.WriteLine("-------------------------------------");
 

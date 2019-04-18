@@ -63,6 +63,12 @@ namespace IPZTranslator
 
             root.Print(root);
 
+            CodeGenerator codeGen = new CodeGenerator(lexer.LexerInfoTable, root);
+
+            var generatedCode = codeGen.Generate();
+
+            Console.WriteLine(generatedCode);
+
             Console.Read();
         }
     }

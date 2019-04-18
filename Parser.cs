@@ -6,40 +6,6 @@ using System.Threading.Tasks;
 
 namespace IPZTranslator
 {
-    public class Node
-    {
-        public string Value { get; private set; }
-        public List<Node> Children { get; private set; }
-
-        public Node()
-        {
-            Children = new List<Node>();
-        }
-
-        public Node(string value)
-        {
-            Value = value;
-            Children = new List<Node>();
-        }
-
-        public Node(int value)
-        {
-            Value = value.ToString();
-            Children = new List<Node>();
-        }
-
-        public void Print(Node node, int spaces = 0)
-        {
-            for (int i = 0; i < spaces; i++)
-                Console.Write("  ");
-            Console.WriteLine(node.Value);
-
-            if (node?.Children != null)
-                foreach (Node n in node.Children)
-                    Print(n, spaces + 1);
-        }
-    }
-
     public class Parser
     {
         #region Properties
@@ -361,7 +327,10 @@ namespace IPZTranslator
             nodes.Add(new Node("<Alternative-part>"));
 
             if (_tokens[_currentToken].code != _grammarLexems["ELSE"])
+            {
+                nodes.Last().Children.Add(new Node("<Empty>"));
                 return Response.Empty; // it can be empty due to the grammar
+            }
             else // There is an alternative part
             {
                 nodes.Last().Children.Add(new Node(_tokens[_currentToken].code));
