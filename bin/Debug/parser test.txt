@@ -1,11 +1,12 @@
 Program p1;
 BEGIN
 if b2 >= 12 then
- 
+ while 256 < 128 do
+  if 22 <> 22 then
+   (* break? *)
+  endif;
+ endwhile;
 else (* nothing *)
-Else if 55 >= 56 then
-     endif;
-Else
 endif ;
 
 END.
