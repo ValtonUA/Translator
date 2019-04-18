@@ -95,6 +95,8 @@ namespace IPZTranslator
             }
             else // if not - it`s a while loop
             {
+                GenerateCode(ref _codeSegment, "; while"); // com
+
                 var label1 = GetLabel();
                 var label2 = GetLabel();
 
@@ -102,13 +104,17 @@ namespace IPZTranslator
 
                 conditional_expression(node.Children
                     .Single(i => i.Value == "<Conditional-expression>")
-                    , label1);
+                    , label2);
+
+                GenerateCode(ref _codeSegment, "; do");// com
 
                 statements_list(node.Children
                     .Single(i => i.Value == "<Statements-list>"));
 
                 GenerateCode(ref _codeSegment, "JMP " + label1);
                 GenerateCode(ref _codeSegment, "nop", label2 + ':');
+
+                GenerateCode(ref _codeSegment, "; endwhile"); // com
             }
         }
 
@@ -116,7 +122,7 @@ namespace IPZTranslator
         {
             var label1 = GetLabel();
             var label2 = GetLabel();
-        
+            
             // if ... then branch
             incomplete_condition_statement(node.Children
                 .Single(i => i.Value == "<Incomplete-condition-statement>")
@@ -125,19 +131,26 @@ namespace IPZTranslator
             GenerateCode(ref _codeSegment, "JMP " + label2);
             GenerateCode(ref _codeSegment, "nop", label1 + ':');
 
+            GenerateCode(ref _codeSegment, "; else"); // com
+
             // else branch
             alternative_part(node.Children
                 .Single(i => i.Value == "<Alternative-part>"));
 
             GenerateCode(ref _codeSegment, "nop", label2 + ':');
+
+            GenerateCode(ref _codeSegment, "; endif"); // com
         }
 
         void incomplete_condition_statement(Node node, string label1)
         {
+            GenerateCode(ref _codeSegment, "; if"); // com
             // condition
             conditional_expression(node.Children
                 .Single(i => i.Value == "<Conditional-expression>")
                 , label1);
+
+            GenerateCode(ref _codeSegment, "; then"); // com
             // then branch
             statements_list(node.Children
                 .Single(i => i.Value == "<Statements-list>"));
@@ -152,7 +165,7 @@ namespace IPZTranslator
                 .Single(i => i.Value == "<Statements-list>"));
         }
 
-        void conditional_expression(Node node, string label1)
+        void conditional_expression(Node node, string label)
         {
             expression(node.Children
                 .First(i => i.Value == "<Expression>")
@@ -168,17 +181,17 @@ namespace IPZTranslator
             GenerateCode(ref _codeSegment, "cmp ax, bx");
 
             if (signCode == _infoTable.ShortDelimiters[">"])
-                GenerateCode(ref _codeSegment, "JLE " + label1);
+                GenerateCode(ref _codeSegment, "JLE " + label);
             else if (signCode == _infoTable.LongDelimiters[">="])
-                GenerateCode(ref _codeSegment, "JL " + label1);
+                GenerateCode(ref _codeSegment, "JL " + label);
             else if (signCode == _infoTable.ShortDelimiters["="])
-                GenerateCode(ref _codeSegment, "JNE " + label1);
+                GenerateCode(ref _codeSegment, "JNE " + label);
             else if (signCode == _infoTable.LongDelimiters["<>"])
-                GenerateCode(ref _codeSegment, "JE " + label1);
+                GenerateCode(ref _codeSegment, "JE " + label);
             else if (signCode == _infoTable.ShortDelimiters["<"])
-                GenerateCode(ref _codeSegment, "JGE " + label1);
+                GenerateCode(ref _codeSegment, "JGE " + label);
             else if (signCode == _infoTable.LongDelimiters["<="])
-                GenerateCode(ref _codeSegment, "JG " + label1);
+                GenerateCode(ref _codeSegment, "JG " + label);
         }
 
         int comparison_operator(Node node)
