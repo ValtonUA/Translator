@@ -54,13 +54,15 @@ namespace IPZTranslator
         public Node Parse()
         {
             _currentToken = 0;
+            _errorList = string.Empty;
 
             Node root = new Node("<Signal program>");
-            if (program(root.Children) == Response.EOF) {
-                _currentToken = _tokens.Count - 1;
-                AddError("Unexpected end of file. File structure was failed");
-            }
-            return root;
+            program(root.Children);
+
+            if (string.IsNullOrEmpty(_errorList))
+                return root;
+            else
+                return null;
         }
 
         void AddError(string message)
@@ -83,8 +85,6 @@ namespace IPZTranslator
             else
                 nodes.Last().Children.Add(new Node(_tokens[_currentToken].code));
             _currentToken++;
-            if (_currentToken >= _tokens.Count)
-                return Response.EOF;
 
             if (procedure_identifier(nodes.Last().Children) == Response.EOF)
                 return Response.EOF;
@@ -98,8 +98,6 @@ namespace IPZTranslator
             else
                 nodes.Last().Children.Add(new Node(_tokens[_currentToken].code));
             _currentToken++;
-            if (_currentToken >= _tokens.Count)
-                return Response.EOF;
 
             if (block(nodes.Last().Children) == Response.EOF)
                 return Response.EOF;
@@ -129,8 +127,6 @@ namespace IPZTranslator
             else
                 nodes.Last().Children.Add(new Node(_tokens[_currentToken].code));
             _currentToken++;
-            if (_currentToken >= _tokens.Count)
-                return Response.EOF;
 
             if (statements_list(nodes.Last().Children) == Response.EOF)
                 return Response.EOF;
@@ -144,8 +140,6 @@ namespace IPZTranslator
             else
                 nodes.Last().Children.Add(new Node(_tokens[_currentToken].code));
             _currentToken++;
-            if (_currentToken >= _tokens.Count)
-                return Response.EOF;
 
             return Response.OK;
         }
@@ -189,8 +183,6 @@ namespace IPZTranslator
                 else
                     nodes.Last().Children.Add(new Node(_tokens[_currentToken].code));
                 _currentToken++;
-                if (_currentToken >= _tokens.Count)
-                    return Response.EOF;
 
                 if (_tokens[_currentToken].code != _grammarLexems[";"])
                 {
@@ -201,8 +193,6 @@ namespace IPZTranslator
                 else
                     nodes.Last().Children.Add(new Node(_tokens[_currentToken].code));
                 _currentToken++;
-                if (_currentToken >= _tokens.Count)
-                    return Response.EOF;
             }
             else // trying another branch
             {
@@ -215,8 +205,6 @@ namespace IPZTranslator
                 else
                     nodes.Last().Children.Add(new Node(_tokens[_currentToken].code));
                 _currentToken++;
-                if (_currentToken >= _tokens.Count)
-                    return Response.EOF;
 
                 if (conditional_expression(nodes.Last().Children) == Response.EOF)
                     return Response.EOF;
@@ -230,8 +218,6 @@ namespace IPZTranslator
                 else
                     nodes.Last().Children.Add(new Node(_tokens[_currentToken].code));
                 _currentToken++;
-                if (_currentToken >= _tokens.Count)
-                    return Response.EOF;
 
                 if (statements_list(nodes.Last().Children) == Response.EOF)
                     return Response.EOF;
@@ -245,8 +231,6 @@ namespace IPZTranslator
                 else
                     nodes.Last().Children.Add(new Node(_tokens[_currentToken].code));
                 _currentToken++;
-                if (_currentToken >= _tokens.Count)
-                    return Response.EOF;
 
                 if (_tokens[_currentToken].code != _grammarLexems[";"])
                 {
@@ -257,8 +241,6 @@ namespace IPZTranslator
                 else
                     nodes.Last().Children.Add(new Node(_tokens[_currentToken].code));
                 _currentToken++;
-                if (_currentToken >= _tokens.Count)
-                    return Response.EOF;
             }
 
             return Response.OK;
@@ -298,8 +280,6 @@ namespace IPZTranslator
                 }
             nodes.Last().Children.Add(new Node(_tokens[_currentToken].code));
             _currentToken++;
-            if (_currentToken >= _tokens.Count)
-                return Response.EOF;
 
             if (conditional_expression(nodes.Last().Children) == Response.EOF)
                 return Response.EOF;
@@ -313,8 +293,6 @@ namespace IPZTranslator
             else
                 nodes.Last().Children.Add(new Node(_tokens[_currentToken].code));
             _currentToken++;
-            if (_currentToken >= _tokens.Count)
-                return Response.EOF;
 
             if (statements_list(nodes.Last().Children) == Response.EOF)
                 return Response.EOF;
@@ -335,8 +313,6 @@ namespace IPZTranslator
             {
                 nodes.Last().Children.Add(new Node(_tokens[_currentToken].code));
                 _currentToken++;
-                if (_currentToken >= _tokens.Count)
-                    return Response.EOF;
 
                 if (statements_list(nodes.Last().Children) == Response.EOF)
                     return Response.EOF;
@@ -379,8 +355,6 @@ namespace IPZTranslator
             else
                 nodes.Last().Children.Add(new Node(_tokens[_currentToken].code));
             _currentToken++;
-            if (_currentToken >= _tokens.Count)
-                return Response.EOF;
 
             return Response.OK;
         }
@@ -407,16 +381,7 @@ namespace IPZTranslator
                     return Response.EOF;
                 }
             }
-            /*
-            if (_tokens[_currentToken].code < InfoTable.CONSTANTS_START)
-                AddError("Expected identifier or constant, but '" +
-                    _tokens[_currentToken].code + "' found.");
-            else
-                nodes.Last().Children.Add(new Node(_tokens[_currentToken].code));
-            _currentToken++;
-            if (_currentToken >= _tokens.Count)
-                return Response.EOF;
-*/
+
             return Response.OK;
         }
 
@@ -452,8 +417,6 @@ namespace IPZTranslator
             else
                 nodes.Last().Children.Add(new Node(_tokens[_currentToken].code));
             _currentToken++;
-            if (_currentToken >= _tokens.Count)
-                return Response.EOF;
 
             return Response.OK;
         }
@@ -478,8 +441,6 @@ namespace IPZTranslator
             else
                 nodes.Last().Children.Add(new Node(_tokens[_currentToken].code));
             _currentToken++;
-            if (_currentToken >= _tokens.Count)
-                return Response.EOF;
 
             return Response.OK;
         }
@@ -489,7 +450,7 @@ namespace IPZTranslator
             if (string.IsNullOrEmpty(_errorList))
                 return "Parser: Error list is empty!\n";
             else
-                return _errorList;
+                return "Parser: " + _errorList;
         }
         #endregion
     }

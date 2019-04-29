@@ -13,14 +13,11 @@ namespace IPZTranslator
         {
             Lexer lexer = new Lexer();
 
-            //const string FILENAME = "test.txt";
-            const string FILENAME = "parser test.txt";
-            //const string FILENAME = "parser test 2.txt";
-            //const string FILENAME = "parser test with errors.txt";
-            //const string FILENAME = "parser test with errors 2.txt";
-            //const string FILENAME = "parser test with errors 3.txt";
+            const string FROM_FILENAME = "test.txt";
+            const string TO_FILENAME = "assembler.txt";
+            const string LISTING_FILENAME = "listing.txt";
 
-            List<Token> tokens = lexer.Analyze(FILENAME);
+            List<Token> tokens = lexer.Analyze(FROM_FILENAME);
             if (tokens == null)
             {
                 Console.WriteLine("Lexer found errors. End of tranlating.");
@@ -43,31 +40,54 @@ namespace IPZTranslator
 
             Node root = parser.Parse();
 
-            string listingFile = "";
+            if (root == null)
+            {
+                Console.WriteLine("Parser found errors. End of tranlating.");
+                Console.Read();
+                return;
+            }
+            //root.Print(root);
+
+            CodeGenerator codeGen = new CodeGenerator(lexer.LexerInfoTable, root);
+
+            var generatedCode = codeGen.Generate();
+            if (generatedCode == null)
+            {
+                Console.WriteLine("Code generator found errors. End of tranlating.");
+                Console.Read();
+                return;
+            }
+            //Console.WriteLine(generatedCode);
+
             try
             {
-                FileStream fs = new FileStream(FILENAME, FileMode.Open, FileAccess.Read);
+                // create listing file
+                string listingFile = "";
+                FileStream fs = new FileStream(FROM_FILENAME, FileMode.Open, FileAccess.Read);
                 using (var sr = new StreamReader(fs, Encoding.ASCII))
                 {
-                    listingFile = "\n" + "Program text:" + "\n\n";
                     listingFile += sr.ReadToEnd();
                 }
-                listingFile += "\n\n" + lexer.GetErrorList();
-                listingFile += parser.GetErrorList();
-                Console.WriteLine(listingFile);
+                listingFile += "\r\n" + lexer.GetErrorList() + "\r\n";
+                listingFile += parser.GetErrorList() + "\r\n";
+                listingFile += codeGen.GetErrorList() + "\r\n";
+                // write it to a file
+                fs = new FileStream(LISTING_FILENAME, FileMode.Create, FileAccess.Write);
+                using (var sw = new StreamWriter(fs, Encoding.Unicode))
+                    sw.WriteLine(listingFile);
+
+                // write generated code to a file
+                fs = new FileStream(TO_FILENAME, FileMode.Create, FileAccess.Write);
+                using (var sw = new StreamWriter(fs, Encoding.ASCII))
+                    sw.WriteLine(generatedCode);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
 
-            root.Print(root);
-
-            CodeGenerator codeGen = new CodeGenerator(lexer.LexerInfoTable, root);
-
-            var generatedCode = codeGen.Generate();
-
-            Console.WriteLine(generatedCode);
+            Console.WriteLine("Files '" + TO_FILENAME + "' and '" +
+                LISTING_FILENAME + "' have been created successfully!");
 
             Console.Read();
         }

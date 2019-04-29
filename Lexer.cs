@@ -223,7 +223,6 @@ namespace IPZTranslator
                                 {
                                     if (_currPos >= _programText.Length)
                                     {
-                                        //AddError("Non-closed commentary, missed '*'\n");
                                         AddError("Non-closed commentary\n");
                                         exitFlag = true;
                                         break;
@@ -234,7 +233,6 @@ namespace IPZTranslator
                                     break;
                                 if (_currPos >= _programText.Length)
                                 {
-                                    //AddError("Non-closed commentary, missed ')'\n");
                                     AddError("Non-closed commentary\n");
                                     exitFlag = true;
                                 }
@@ -256,6 +254,8 @@ namespace IPZTranslator
                         }
                 }
             }
+            // Special lexem using in parser for catching EOF properly
+            OutToken("EOF", Category.let);
 
             if (string.IsNullOrEmpty(_errorList))
                 return _tokens;
@@ -300,7 +300,7 @@ namespace IPZTranslator
                     {
                         foreach(string keyword in _keywords)
                         {
-                            if (keyword == lexem.ToUpper()) // Our lexem is keyword
+                            if (keyword == lexem.ToUpper()) // Our lexem is a keyword
                             {
                                 lexemCode = LexerInfoTable.AddKeyword(lexem.ToUpper());
                                 break;
@@ -336,7 +336,7 @@ namespace IPZTranslator
             if (string.IsNullOrEmpty(_errorList))
                 return "Lexer: Error list is empty!\n";
             else
-                return _errorList;
+                return "Lexer: " + _errorList;
         }
     }
 }

@@ -1,0 +1,39 @@
+          .model small
+          .stack 100h
+          .data
+          	b2 DW 0
+          .code
+p1:       nop
+          ; if
+          mov ax, b2
+          mov bx, b2
+          cmp ax, bx
+          JL ?L0
+          ; then
+          ; while
+?L2:      nop
+          mov ax, 256
+          mov bx, 128
+          cmp ax, bx
+          JLE ?L3
+          ; do
+          JMP ?L2
+?L3:      nop
+          ; endwhile
+          JMP ?L1
+?L0:      nop
+          ; else
+          ; while
+?L4:      nop
+          mov ax, 256
+          mov bx, 128
+          cmp ax, bx
+          JGE ?L5
+          ; do
+          JMP ?L4
+?L5:      nop
+          ; endwhile
+?L1:      nop
+          ; endif
+          end p1
+

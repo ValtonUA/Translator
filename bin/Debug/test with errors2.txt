@@ -1,5 +1,0 @@
-PROGREM p1;
-WHILE a != 2 DO
- * Long comm *)
-ENDWHILE
-(* and *
